@@ -20,6 +20,8 @@ Puppet WP-CLI is also available via [Puppet Forge](http://forge.puppetlabs.com/r
 
 ## Usage
 
+```
+
 	# Setup the site
 	wp::site {'/vagrant/wp':
 		# location => '/vagrant/wp',
@@ -62,6 +64,40 @@ Puppet WP-CLI is also available via [Puppet Forge](http://forge.puppetlabs.com/r
 			location => '/vagrant/wp',
 			require => Wp::Site['store'],
 		}
+
+```
+
+## Another wp_example.pp
+
+This example might be better suited for puppet noobs:
+
+```
+node "myhost" {
+
+  include mysql::server
+
+  mysql::db { 'testsite':
+    user     => 'testsite',
+    password => 'random_strong_password',
+  }
+
+  $wplocation = '/var/www/testsite'
+  notify {$wplocation:}
+
+  wp::site { $wplocation:
+    location => $wplocation,
+    url => 'http://testsite',
+    name => 'Just testing',
+    require => Mysql::Db['testsite']
+  }
+}
+
+```
+
+Note: at this point you have to set up the WordPress site yourself.
+https://github.com/rmccue/puppet-wp/pull/7 might change that in the future.
+
+
 
 ## License
 This code is licensed under the MIT license.
